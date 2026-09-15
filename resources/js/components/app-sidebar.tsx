@@ -1,5 +1,6 @@
 import { Link } from '@inertiajs/react';
-import { BookOpen, FolderGit2, LayoutGrid } from 'lucide-react';
+import { BookOpen, FileText, FolderGit2, LayoutGrid, Handshake } from 'lucide-react';
+import { index as clients } from '@/routes/clients';
 import AppLogo from '@/components/app-logo';
 import { NavFooter } from '@/components/nav-footer';
 import { NavMain } from '@/components/nav-main';
@@ -18,9 +19,14 @@ import type { NavItem } from '@/types';
 
 const mainNavItems: NavItem[] = [
     {
-        title: 'Dashboard',
+        title: 'Panel de control',
         href: dashboard(),
         icon: LayoutGrid,
+    },
+    {
+        title: 'Clientes',
+        href: clients(),
+        icon: Handshake,
     },
 ];
 
