@@ -2,6 +2,9 @@ import { Link } from '@inertiajs/react';
 import {
     BookOpen,
     BriefcaseBusiness,
+    ClipboardList,
+    Scale,
+    CalendarClock,
     FileText,
     FolderGit2,
     LayoutGrid,
@@ -9,6 +12,9 @@ import {
 } from 'lucide-react';
 import { index as abogados } from '@/routes/abogados';
 import { index as clients } from '@/routes/clients';
+import { index as servicios } from '@/routes/servicios';
+import { index as causas } from '@/routes/causas';
+import { index as audiencias } from '@/routes/audiencias';
 import AppLogo from '@/components/app-logo';
 import { NavFooter } from '@/components/nav-footer';
 import { NavMain } from '@/components/nav-main';
@@ -32,7 +38,7 @@ const mainNavItems: NavItem[] = [
         icon: LayoutGrid,
     },
     {
-        title: 'Clients',
+        title: 'Clientes',
         href: clients(),
         icon: Handshake,
     },
@@ -40,6 +46,21 @@ const mainNavItems: NavItem[] = [
         title: 'Abogados',
         href: abogados(),
         icon: BriefcaseBusiness,
+    },
+    {
+        title: 'Servicios',
+        href: servicios(),
+        icon: ClipboardList,
+    },
+    {
+        title: 'Causas',
+        href: causas(),
+        icon: Scale,
+    },
+    {
+        title: 'Audiencias',
+        href: audiencias(),
+        icon: CalendarClock,
     },
 ];
 

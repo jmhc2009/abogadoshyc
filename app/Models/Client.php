@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 /**
  * @property int $id
@@ -25,4 +26,9 @@ use Illuminate\Database\Eloquent\Model;
 class Client extends Model
 {
     // Model implementation
+
+    public function causasRepresentadas(): BelongsToMany
+    {
+        return $this->belongsToMany(Causa::class, 'causa_cliente');
+    }
 }
