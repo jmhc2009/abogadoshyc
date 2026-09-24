@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
     <meta charset="utf-8">
-    <title>Ficha técnica - {{ $client->name }}</title>
+    <title>Ficha técnica - {{ $abogado->nombres }} {{ $abogado->apellidos }}</title>
     <style>
         @page {
             margin: 18mm 16mm;
@@ -27,13 +27,8 @@
             gap: 12px;
         }
 
-        .brand img {
-            height: 46px;
-            width: 46px;
-        }
-
         .brand img.logo-main {
-            max-width: 150px;
+            max-width: 100px;
             height: auto;
         }
 
@@ -123,11 +118,11 @@
             <img src="{{ $logoSrc }}" alt="Logo de AbogadosHYC" class="logo-main">
             <div>
                 <div class="brand-name">ABOGADOSHYC</div>
-                <div class="document-title">Ficha técnica del cliente</div>
+                <div class="document-title">Ficha técnica del abogado</div>
             </div>
         </div>
         <div class="reference">
-            Documento generado el {{ now()->format('d/m/Y H:i') }} · Cliente N.º {{ $client->id }}
+            Documento generado el {{ now()->format('d/m/Y H:i') }} · Abogado N.º {{ $abogado->id }}
         </div>
     </header>
 
@@ -135,72 +130,44 @@
         <h2 class="section-title">Datos personales</h2>
         <table>
             <tr>
-                <th>Nombre completo</th>
-                <td>{{ $client->name }}</td>
+                <th>Nombres</th>
+                <td>{{ $abogado->nombres }}</td>
+            </tr>
+            <tr>
+                <th>Apellidos</th>
+                <td>{{ $abogado->apellidos }}</td>
             </tr>
             <tr>
                 <th>RUT</th>
-                <td>{{ $client->rut }}</td>
+                <td>{{ $abogado->rut_formatted }}</td>
             </tr>
-            <tr>
-                <th>Nacionalidad</th>
-                <td>{{ $client->nationality ?: 'Sin información' }}</td>
-            </tr>
-            <tr>
-                <th>Estado civil</th>
-                <td>{{ $client->marital_status ?: 'Sin información' }}</td>
-            </tr>
-            <tr>
-                <th>Ocupación</th>
-                <td>{{ $client->occupation ?: 'Sin información' }}</td>
-            </tr>
-        </table>
-    </section>
-
-    <section class="section">
-        <h2 class="section-title">Contacto</h2>
-        <table>
             <tr>
                 <th>Correo electrónico</th>
-                <td>{{ $client->email ?: 'Sin correo registrado' }}</td>
+                <td>{{ $abogado->email }}</td>
             </tr>
             <tr>
                 <th>Teléfono</th>
-                <td>{{ $client->phone ?: 'Sin teléfono registrado' }}</td>
+                <td>{{ $abogado->telefono ?: 'Sin teléfono registrado' }}</td>
             </tr>
         </table>
     </section>
 
     <section class="section">
-        <h2 class="section-title">Dirección</h2>
+        <h2 class="section-title">Información profesional</h2>
         <table>
             <tr>
-                <th>Dirección</th>
-                <td>
-                    @php
-                        $address = collect([$client->street, $client->number])->filter()->implode(' ');
-                        $location = collect([$client->commune, $client->region])->filter()->implode(', ');
-                    @endphp
-                    {{ $address ?: 'Sin dirección registrada' }}
-                    @if ($location)
-                        <br>{{ $location }}
-                    @endif
-                </td>
+                <th>Especialidad</th>
+                <td>{{ $abogado->especialidad ?: 'Sin información' }}</td>
             </tr>
-        </table>
-    </section>
-
-    <section class="section">
-        <h2 class="section-title">Casos vinculados</h2>
-        <table>
             <tr>
-                <td class="muted">No hay casos registrados para este cliente.</td>
+                <th>Estado</th>
+                <td>{{ $abogado->is_active ? 'Activo' : 'Inactivo' }}</td>
             </tr>
         </table>
     </section>
 
     <footer class="footer">
-        AbogadosHYC · Ficha técnica de cliente · Información de uso interno
+        AbogadosHYC · Ficha técnica de abogado · Información de uso interno
     </footer>
 </body>
 </html>

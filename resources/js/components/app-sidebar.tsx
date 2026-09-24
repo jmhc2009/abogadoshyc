@@ -1,5 +1,13 @@
 import { Link } from '@inertiajs/react';
-import { BookOpen, FileText, FolderGit2, LayoutGrid, Handshake } from 'lucide-react';
+import {
+    BookOpen,
+    BriefcaseBusiness,
+    FileText,
+    FolderGit2,
+    LayoutGrid,
+    Handshake,
+} from 'lucide-react';
+import { index as abogados } from '@/routes/abogados';
 import { index as clients } from '@/routes/clients';
 import AppLogo from '@/components/app-logo';
 import { NavFooter } from '@/components/nav-footer';
@@ -24,9 +32,14 @@ const mainNavItems: NavItem[] = [
         icon: LayoutGrid,
     },
     {
-        title: 'Clientes',
+        title: 'Clients',
         href: clients(),
         icon: Handshake,
+    },
+    {
+        title: 'Abogados',
+        href: abogados(),
+        icon: BriefcaseBusiness,
     },
 ];
 

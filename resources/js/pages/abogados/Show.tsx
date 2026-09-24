@@ -7,7 +7,6 @@ import {
     FileDown,
     Loader2,
     Mail,
-    MapPin,
     Phone,
     UserRound,
 } from 'lucide-react';
@@ -20,42 +19,23 @@ import {
     CardHeader,
     CardTitle,
 } from '@/components/ui/card';
-import type { Client } from '@/types/client';
-import { index as clientsRoute, pdf as clientPdfRoute } from '@/routes/clients';
+import type { Abogado } from '@/types/abogado';
+import {
+    index as abogadosRoute,
+    pdf as abogadoPdfRoute,
+} from '@/routes/abogados';
 
 interface ShowProps {
-    client: Client;
+    abogado: Abogado;
 }
 
-const formatRut = (rut: string) => {
-    const normalized = rut.replace(/[^0-9kK]/g, '').toUpperCase();
-    const verifier = normalized.slice(-1);
-    const number = normalized.slice(0, -1);
-
-    return number
-        ? `${number.replace(/\B(?=(\d{3})+(?!\d))/g, '.')}-${verifier}`
-        : rut;
-};
-
-const formatPhone = (phone?: string | null) => {
-    if (!phone) return 'Sin teléfono';
-    return phone.startsWith('+') ? phone : `+56 ${phone}`;
-};
-
-const formatMaritalStatus = (status?: string | null) => {
-    if (!status) return 'Sin información';
-    return status.charAt(0).toUpperCase() + status.slice(1).toLowerCase();
-};
-
-export default function Show({ client }: ShowProps) {
+export default function Show({ abogado }: ShowProps) {
     const [isGenerating, setIsGenerating] = useState(false);
-    const address = [client.street, client.number].filter(Boolean).join(' ');
-    const location = [client.commune, client.region].filter(Boolean).join(', ');
 
     const handleGeneratePdf = async () => {
         if (isGenerating) return;
         setIsGenerating(true);
-        const url = clientPdfRoute(client.id).url;
+        const url = abogadoPdfRoute(abogado.id).url;
 
         try {
             const response = await fetch(url, {
@@ -71,7 +51,7 @@ export default function Show({ client }: ShowProps) {
 
             const contentType = response.headers.get('content-type') || '';
             if (!contentType.includes('application/pdf')) {
-                throw new Error('El respuesta no es un PDF válido.');
+                throw new Error('La respuesta no es un PDF válido.');
             }
 
             const blob = await response.blob();
@@ -84,7 +64,9 @@ export default function Show({ client }: ShowProps) {
                 );
             }
 
-            toast.success(`Ficha de ${client.name} generada correctamente.`);
+            toast.success(
+                `Ficha de ${abogado.nombres} ${abogado.apellidos} generada correctamente.`,
+            );
         } catch (error) {
             console.error('Error al generar el PDF:', error);
             toast.error(
@@ -97,16 +79,16 @@ export default function Show({ client }: ShowProps) {
 
     return (
         <>
-            <Head title={client.name} />
+            <Head title={`${abogado.nombres} ${abogado.apellidos}`} />
 
             <div className="space-y-6 p-4 md:p-6">
                 <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
                     <div>
                         <p className="text-sm text-slate-500">
-                            Detalle del cliente
+                            Detalle del abogado
                         </p>
                         <h1 className="text-2xl font-semibold tracking-tight text-slate-950">
-                            {client.name}
+                            {abogado.nombres} {abogado.apellidos}
                         </h1>
                     </div>
                     <div className="flex flex-wrap gap-2">
@@ -129,7 +111,7 @@ export default function Show({ client }: ShowProps) {
                             variant="outline"
                             className="w-fit border-slate-200 bg-white text-slate-700 hover:bg-slate-50 hover:text-slate-900"
                         >
-                            <Link href={clientsRoute().url}>
+                            <Link href={abogadosRoute().url}>
                                 <ArrowLeft className="mr-2 size-4" />
                                 Volver
                             </Link>
@@ -148,48 +130,28 @@ export default function Show({ client }: ShowProps) {
                                     Información personal
                                 </CardTitle>
                                 <CardDescription className="mt-1 text-slate-500">
-                                    Datos de identificación registrados
+                                    Datos de identificación del abogado
                                 </CardDescription>
                             </div>
                         </div>
                     </CardHeader>
                     <CardContent className="grid gap-6 pt-6 sm:grid-cols-3">
                         <div>
-                            <p className="text-sm text-slate-500">
-                                Nombre completo
-                            </p>
+                            <p className="text-sm text-slate-500">Nombres</p>
                             <p className="mt-1 font-medium text-slate-900">
-                                {client.name}
+                                {abogado.nombres}
+                            </p>
+                        </div>
+                        <div>
+                            <p className="text-sm text-slate-500">Apellidos</p>
+                            <p className="mt-1 font-medium text-slate-900">
+                                {abogado.apellidos}
                             </p>
                         </div>
                         <div>
                             <p className="text-sm text-slate-500">RUT</p>
                             <p className="mt-1 font-mono font-medium text-slate-900">
-                                {formatRut(client.rut)}
-                            </p>
-                        </div>
-                        <div>
-                            <p className="text-sm text-slate-500">
-                                Nacionalidad
-                            </p>
-                            <p className="mt-1 font-medium text-slate-900">
-                                {client.nationality || 'Sin información'}
-                            </p>
-                        </div>
-                        <div>
-                            <p className="text-sm text-slate-500">
-                                Estado civil
-                            </p>
-                            <p className="mt-1 flex items-center gap-2 font-medium text-slate-900">
-                                <UserRound className="size-4 text-slate-400" />
-                                {formatMaritalStatus(client.marital_status)}
-                            </p>
-                        </div>
-                        <div>
-                            <p className="text-sm text-slate-500">Ocupación</p>
-                            <p className="mt-1 flex items-center gap-2 font-medium text-slate-900">
-                                <BriefcaseBusiness className="size-4 text-slate-400" />
-                                {client.occupation || 'Sin información'}
+                                {abogado.rut_formatted}
                             </p>
                         </div>
                     </CardContent>
@@ -198,11 +160,10 @@ export default function Show({ client }: ShowProps) {
                 <Card className="rounded-xl border-slate-200 bg-white shadow-sm">
                     <CardHeader className="border-b border-slate-100">
                         <CardTitle className="text-lg text-slate-900">
-                            Contacto y ubicación
+                            Información profesional
                         </CardTitle>
                         <CardDescription className="mt-1 text-slate-500">
-                            Medios de contacto y dirección registrada del
-                            cliente
+                            Datos de contacto y estado del abogado
                         </CardDescription>
                     </CardHeader>
                     <CardContent className="grid gap-6 pt-6 md:grid-cols-2 lg:grid-cols-3">
@@ -215,7 +176,7 @@ export default function Show({ client }: ShowProps) {
                                     Correo electrónico
                                 </p>
                                 <p className="mt-1 font-medium text-slate-900">
-                                    {client.email || 'Sin correo'}
+                                    {abogado.email}
                                 </p>
                             </div>
                         </div>
@@ -229,27 +190,43 @@ export default function Show({ client }: ShowProps) {
                                     Teléfono
                                 </p>
                                 <p className="mt-1 font-medium text-slate-900">
-                                    {formatPhone(client.phone)}
+                                    {abogado.phone || 'Sin teléfono'}
                                 </p>
                             </div>
                         </div>
 
                         <div className="flex items-start gap-3">
                             <div className="flex size-10 shrink-0 items-center justify-center rounded-lg bg-slate-100 text-slate-700">
-                                <MapPin className="size-4" />
+                                <BriefcaseBusiness className="size-4" />
                             </div>
                             <div>
                                 <p className="text-sm text-slate-500">
-                                    Dirección
+                                    Especialidad
                                 </p>
                                 <p className="mt-1 font-medium text-slate-900">
-                                    {address || 'Sin dirección'}
-                                </p>
-                                <p className="mt-1 text-sm text-slate-500">
-                                    {location || 'Sin comuna ni región'}
+                                    {abogado.especialidad || 'Sin información'}
                                 </p>
                             </div>
                         </div>
+                    </CardContent>
+                </Card>
+
+                <Card className="rounded-xl border-slate-200 bg-white shadow-sm">
+                    <CardHeader className="border-b border-slate-100">
+                        <CardTitle className="text-lg text-slate-900">
+                            Estado
+                        </CardTitle>
+                    </CardHeader>
+                    <CardContent className="pt-6">
+                        <p
+                            className={`inline-flex items-center rounded-full px-3 py-1 text-xs font-medium ${
+                                abogado.is_active
+                                    ? 'bg-emerald-100 text-emerald-700'
+                                    : 'bg-slate-200 text-slate-600'
+                            }`}
+                        >
+                            {abogado.is_active ? 'Activo' : 'Inactivo'}
+                        </p>
                     </CardContent>
                 </Card>
             </div>

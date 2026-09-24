@@ -51,7 +51,7 @@ class ClientController extends Controller
             'client' => $client,
         ])->setPaper('a4')->setOption('defaultFont', 'DejaVu Sans');
 
-        return $pdf->download('ficha-cliente-'.$client->id.'.pdf');
+        return $pdf->stream('ficha-cliente-'.$client->id.'.pdf');
     }
 
     /**

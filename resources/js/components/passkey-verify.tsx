@@ -19,9 +19,9 @@ type Props = {
 
 export default function PasskeyVerify({
     routes,
-    label,
-    loadingLabel,
-    separator,
+    label = 'Iniciar sesión con una llave de acceso',
+    loadingLabel = 'Autenticando...',
+    separator = 'O continúa con tu correo',
 }: Props = {}) {
     const { verify, isLoading, error, isSupported } = usePasskeyVerify({
         ...(routes && {
